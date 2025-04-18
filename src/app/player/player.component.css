@@ -1,0 +1,149 @@
+.progress {
+  flex: 10;
+  position: relative;
+  display: flex;
+  flex-basis: 100%;
+  min-height: 3px;
+  max-height: 3px;
+  background: rgba(175, 175, 175, 0.2);
+  cursor: pointer;
+  min-width: 100%;
+  margin-bottom: 0.2em;
+  transition-duration: 0.2s
+}
+
+.progress:hover {
+  min-height: 6px;
+  max-height: 6px;
+}
+
+.progress_filled {
+  position: relative;
+  z-index: 100;
+  width: 50%;
+  background: #865bc7;
+  background: linear-gradient(90deg,rgba(134, 91, 199, 1) 0%, rgba(89, 183, 212, 1) 100%);
+  flex: 0;
+  flex-basis: 0%;
+  opacity: 1.0;
+}
+
+.controls {
+  min-width: 100%;
+  padding-bottom: 0.4em;
+  height: 50;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 10;
+  gap: 0.5em;
+  background: rgba(20, 20, 20, 0.5);
+}
+
+.controls__button {
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  color: white;
+  font-size: 1.5em;
+}
+
+.controls__button:hover {
+  cursor: pointer;
+}
+
+.button_row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  min-width: 100%;
+}
+
+.button_row_center {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  color: gray !important;
+}
+
+.button_row_left {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  font-size: 12px;
+}
+
+.absolute-video {
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.video-container {
+  background-color: black;
+}
+
+.player_button {
+  max-width: 40px;
+  margin-right: 0.5em;
+  color: #59B7D4 ;
+}
+
+button .pi-button-icon {
+  color :#59B7D4 !important;
+}
+
+.player_volume {
+  position: relative;
+  min-width: 100px;
+}
+
+.volume-container {
+  position: relative;
+  width: auto;
+  height: 100%;
+}
+
+.duration-container {
+  position: relative;
+  width: auto;
+  height: 100%;
+  margin-left: 10px;
+  color: darkgray;
+}
+
+.animated-play-pause {
+  border-radius: 90px;
+  position: relative;
+  text-align: center;
+  z-index: 20;
+  opacity: 1.0;
+  animation-name: playpause;
+  animation-duration: 1s;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
+}
+
+@keyframes playpause {
+  0% {
+    opacity: 0.0;
+  }
+  50% {
+    opacity: 1.0;
+  }
+  100% {
+    opacity: 0.0
+  }
+}
+
+.large-icon {
+  font-size: 64px;
+}
+
+

@@ -1,1 +1,62 @@
-/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+html, body {
+  border: 0;
+  outline: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+h1 {
+  z-index: 10;
+  color: red;
+}
+
+.page-container {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.flex-h-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.flex-v-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.full-w {
+  position: relative;
+  width: 100%;
+}
+
+.full-h {
+  position: relative;
+  height: 100%;
+}
+
+.transp {
+  opacity: 0 !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+

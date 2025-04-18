@@ -1,0 +1,62 @@
+<main class="page-container video-container">
+  <div class="flex-h-center full-w full-h">
+    <div class="flex-v-center full-w full-h">
+      <div class='text-center' >
+        <i class={{animated_overlay_play_icon}} (click)="togglePlay()"></i>
+        <i class={{animated_overlay_pause_icon}} (click)="togglePlay()"></i>
+      </div>
+    </div>
+    <div class="absolute-video">
+      <video (click)="togglePlay()" #videoplayer class="absolute-video" src={{videoSrc}}></video>
+
+      <div [ngClass]="showOverlay ? 'controls' : 'transp'">
+        <div class="progress" (click)="scrubTime($event)" #progressbar>
+          <div class="progress_filled" #progressfill></div>
+        </div>
+        <div class="button_row">
+          <div class="button_row_left">
+          <button pButton ngDefaultControl
+            title="Toggle Play"
+            class="player_button"
+            (click)="togglePlay()"
+            icon="{{playpausesymbol}}"
+            [rounded]="false"
+            ></button>
+
+          <button pButton ngDefaultControl
+            title="Toggle Mute"
+            class="player_button"
+            (click)="toggleMute()"
+            icon="{{mutesymbol}}"
+            [rounded]="false"
+            ></button>
+
+            <div class="volume-container flex-v-center">
+            <p-slider class="player_volume"
+              [(ngModel)]="video_volume"
+              (ngModelChange)="setVolume($event)"
+              ngDefaultControl styleClass="w-56" />
+            </div>
+
+            <div class="duration-container flex-v-center">
+            <span> {{ media_progress }} / {{ media_duration }} </span>
+            </div>
+          </div>
+          <div class="button_row_center">
+          </div>
+          <div class="button_row_right">
+          <button pButton ngDefaultControl
+            title="Maximise/Minimise"
+            class="player_button"
+            (click)="toggleMaximise()"
+            icon="pi pi-expand"
+            [rounded]="false"
+            ></button>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
