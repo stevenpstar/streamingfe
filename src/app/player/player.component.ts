@@ -4,6 +4,7 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
+import { MovieService } from '../movie.service';
 
 @Component({
   selector: 'app-player',
@@ -20,18 +21,41 @@ import { SliderModule } from 'primeng/slider';
 })
 export class PlayerComponent {
   route: ActivatedRoute = inject(ActivatedRoute);
+  movieService: MovieService = inject(MovieService);
 
   @HostListener('window:mousemove', ['$event'])
-  updateOverlay(_: MouseEvent) {
+  updateOverlay(e: MouseEvent) {
+    document.body.style.cursor = "default";
     if (this.mouseTimeout) {
       clearInterval(this.mouseTimeout);
+    }
+    if (e.target === this.progressbar.nativeElement ||
+        e.target === this.progressfill.nativeElement ||
+       e.target === this.progresstracker.nativeElement ||
+       this.draggingScrubber) {
+      this.displayThumbnail(e.clientX);
+    } else {
+      this.hideThumbnail();
     }
     this.showOverlay = true;
       this.mouseTimeout = setTimeout(() => {
         if (!this.videoplayer.nativeElement.paused) {
           this.showOverlay = false;
+          document.body.style.cursor = "none";
         }
       }, 2000);
+
+    if (this.draggingScrubber) {
+        this.scrubTime(e);
+    }
+  }
+
+  @HostListener('window:mouseup', ['$event'])
+  mouseUp(e: MouseEvent) {
+    if (this.draggingScrubber) {
+      this.draggingScrubber = false;
+      this.scrubTime(e);
+    }
   }
 
   @ViewChild('videoplayer')
@@ -43,12 +67,22 @@ export class PlayerComponent {
   @ViewChild('progressbar')
   progressbar!: ElementRef<HTMLDivElement>;
 
+  @ViewChild('progressTracker')
+  progresstracker!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('thumbnailWrapper')
+  thumbnailWrapper!: ElementRef<HTMLDivElement>;
+
   videoSrc = "";
   video_volume = 50;
   media_progress: string = '';
   media_duration: string = '';
+  thumbnails: string[] = [];
+  thumbnail: string = "";
+  hoverTime: string = "";
 
   showOverlay: boolean;
+  draggingScrubber: boolean = false;
   mouseTimeout!: ReturnType<typeof setTimeout>;
 
   animated_overlay_play_icon: string = 'hidden';
@@ -95,9 +129,37 @@ export class PlayerComponent {
   }
 
   scrubTime(e: MouseEvent) {
-    const scrubTime = (e.offsetX / this.progressbar.nativeElement.offsetWidth) * this.videoplayer.nativeElement.duration;
+    const scrubTime = (e.clientX / this.progressbar.nativeElement.offsetWidth) * this.videoplayer.nativeElement.duration;
     this.videoplayer.nativeElement.currentTime = scrubTime;
     this.handleVideoProgress(this.videoplayer.nativeElement);
+  }
+
+  displayThumbnail(offset: number): void {
+    const scrubTime = (offset / this.progressbar.nativeElement.offsetWidth) * this.videoplayer.nativeElement.duration;
+    this.hoverTime = this.formatMediaTimer(scrubTime);
+    let position: number = offset - 100;
+    if (position <= 0) {
+      position = 0;
+    }
+    if (position + 200 > this.progressbar.nativeElement.getBoundingClientRect().width) {
+      position = this.progressbar.nativeElement.getBoundingClientRect().width - 200;
+    }
+    this.thumbnailWrapper.nativeElement.classList.remove("hidden");
+    this.thumbnailWrapper.nativeElement.style.left = `${position}px`;
+    const incr = this.progressbar.nativeElement.getBoundingClientRect().width / this.thumbnails.length;
+    this.thumbnail = `data:image/png;base64,${this.thumbnails[Math.floor(offset / incr)]}`;
+  }
+
+  hideThumbnail(): void {
+    if (this.thumbnailWrapper.nativeElement === null) {
+      return;
+    }
+    this.thumbnailWrapper.nativeElement.classList.add("hidden");
+  }
+
+  dragTime(e: MouseEvent): void {
+    e.preventDefault();
+    this.draggingScrubber = true;
   }
 
   setVolume(volume: number) {
@@ -135,6 +197,11 @@ export class PlayerComponent {
 
   ngAfterViewInit() {
     this.videoplayer.nativeElement.addEventListener("timeupdate", _ => { this.handleVideoProgress(this.videoplayer.nativeElement); });
+    this.movieService.getThumbnails(this.route.snapshot.params['id']).subscribe(
+      thumbs_res => {
+        this.thumbnails = thumbs_res;
+      }
+    );
   }
 
   ngOnDestroy() {

@@ -17,6 +17,12 @@
   max-height: 6px;
 }
 
+.progress:hover > .progress_tracker {
+  height: 20px;
+  width: 20px;
+  top: -7px;
+}
+
 .progress_filled {
   position: relative;
   z-index: 100;
@@ -28,6 +34,18 @@
   opacity: 1.0;
 }
 
+.progress_tracker {
+  z-index: 20;
+  position: relative;
+  height: 15px;
+  width: 15px;
+  top: -6px;
+  border-radius: 90px;
+  background: rgba(89, 183, 212, 0.7);
+  transition-duration: 0.2s;
+  border: 2px solid rgba(89, 183, 212, 1);
+}
+
 .controls {
   min-width: 100%;
   padding-bottom: 0.4em;
@@ -37,7 +55,6 @@
   flex-direction: column;
   justify-content: space-between;
   z-index: 10;
-  gap: 0.5em;
   background: rgba(20, 20, 20, 0.5);
 }
 
@@ -125,16 +142,13 @@ button .pi-button-icon {
   z-index: 20;
   opacity: 1.0;
   animation-name: playpause;
-  animation-duration: 1s;
+  animation-duration: 0.65s;
   animation-timing-function: ease;
   animation-fill-mode: forwards;
 }
 
 @keyframes playpause {
   0% {
-    opacity: 0.0;
-  }
-  50% {
     opacity: 1.0;
   }
   100% {
@@ -144,6 +158,23 @@ button .pi-button-icon {
 
 .large-icon {
   font-size: 64px;
+}
+
+.thumbnail-wrapper {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: -180px;
+  max-width: 200px !important;
+  min-width: 200px;
+  min-height: 20px;
+  height: auto;
+  z-index: 100;
+}
+
+.thumbnail-wrapper img {
+  position: relative;
+  width: 100%;
 }
 
 

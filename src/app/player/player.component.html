@@ -11,7 +11,16 @@
 
       <div [ngClass]="showOverlay ? 'controls' : 'transp'">
         <div class="progress" (click)="scrubTime($event)" #progressbar>
+
+          <div class="thumbnail-wrapper hidden" #thumbnailWrapper>
+            <img src="{{thumbnail}}" />
+            <div class="flex-h-center full-w"> {{hoverTime}} </div>
+          </div>
+
           <div class="progress_filled" #progressfill></div>
+          <div class="progress_tracker" #progressTracker
+            (mousedown)="dragTime($event)"
+            ></div>
         </div>
         <div class="button_row">
           <div class="button_row_left">
