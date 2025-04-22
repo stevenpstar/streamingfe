@@ -1,4 +1,9 @@
 @import "primeicons/primeicons.css";
+@import "material-symbols";
+
+:root {
+  --mat-sys-primary: white;
+}
 
 html, body {
   border: 0;
@@ -59,4 +64,17 @@ h1 {
   display: none !important;
 }
 
+.icon-button {
+  background: rgba(0, 0, 0, 0);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+.icon-button:hover {
+  cursor: pointer;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

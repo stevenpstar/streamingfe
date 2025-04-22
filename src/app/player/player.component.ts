@@ -4,11 +4,14 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { SliderModule } from 'primeng/slider';
+import {MatSliderModule} from '@angular/material/slider';
 import { MovieService } from '../movie.service';
+import { ActorDTO } from '../types/ActorDTO';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-player',
-  imports: [CommonModule, FormsModule, ButtonModule, SliderModule],
+  imports: [CommonModule, FormsModule, ButtonModule, SliderModule, MatIconModule, MatSliderModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -25,10 +28,12 @@ export class PlayerComponent {
 
   @HostListener('window:mousemove', ['$event'])
   updateOverlay(e: MouseEvent) {
+
     document.body.style.cursor = "default";
     if (this.mouseTimeout) {
       clearInterval(this.mouseTimeout);
     }
+
     if (e.target === this.progressbar.nativeElement ||
         e.target === this.progressfill.nativeElement ||
        e.target === this.progresstracker.nativeElement ||
@@ -37,6 +42,7 @@ export class PlayerComponent {
     } else {
       this.hideThumbnail();
     }
+
     this.showOverlay = true;
       this.mouseTimeout = setTimeout(() => {
         if (!this.videoplayer.nativeElement.paused) {
@@ -73,6 +79,12 @@ export class PlayerComponent {
   @ViewChild('thumbnailWrapper')
   thumbnailWrapper!: ElementRef<HTMLDivElement>;
 
+  @ViewChild('dimOverlay')
+  dimOverlay!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('castOverlay')
+  castOverlay!: ElementRef<HTMLDivElement>;
+
   videoSrc = "";
   video_volume = 50;
   media_progress: string = '';
@@ -80,6 +92,7 @@ export class PlayerComponent {
   thumbnails: string[] = [];
   thumbnail: string = "";
   hoverTime: string = "";
+  cast: ActorDTO[] = [];
 
   showOverlay: boolean;
   draggingScrubber: boolean = false;
@@ -88,7 +101,7 @@ export class PlayerComponent {
   animated_overlay_play_icon: string = 'hidden';
   animated_overlay_pause_icon: string = 'hidden';
   playpausesymbol: string = 'pi pi-play';
-  mutesymbol: string = 'pi pi-volume-down';
+  mutesymbol: string = 'volume_down';
 
   constructor() {
     this.videoSrc = "http://localhost:5105/Movies/stream/" + this.route.snapshot.params['id'];
@@ -162,22 +175,23 @@ export class PlayerComponent {
     this.draggingScrubber = true;
   }
 
-  setVolume(volume: number) {
+  setVolume() {
+    let volume = this.video_volume;
     this.videoplayer.nativeElement.volume = (volume / 100);
     this.setVolumeSymbol();
   }
 
   setVolumeSymbol(): void {
     if (this.videoplayer.nativeElement.muted) {
-      this.mutesymbol = 'pi pi-volume-off';
+      this.mutesymbol = 'volume_off';
       return;
     }
     if (this.videoplayer.nativeElement.volume <= 0.5 && this.videoplayer.nativeElement.volume !== 0) {
-      this.mutesymbol = 'pi pi-volume-down';
+      this.mutesymbol = 'volume_down';
     } else if (this.videoplayer.nativeElement.volume > 0.5) {
-      this.mutesymbol = 'pi pi-volume-up';
+      this.mutesymbol = 'volume_up';
     } else {
-      this.mutesymbol = 'pi pi-volume-off';
+      this.mutesymbol = 'volume_mute';
     }
 
   }
@@ -202,6 +216,13 @@ export class PlayerComponent {
         this.thumbnails = thumbs_res;
       }
     );
+    this.movieService.getCast(this.route.snapshot.params['id']).subscribe(
+      cast_res => {
+        this.cast = cast_res;
+        console.log(this.cast);
+      }
+    );
+    this.handleVideoProgress(this.videoplayer.nativeElement);
   }
 
   ngOnDestroy() {

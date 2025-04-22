@@ -1,11 +1,34 @@
 <main class="page-container video-container">
   <div class="flex-h-center full-w full-h">
     <div class="flex-v-center full-w full-h">
-      <div class='text-center' >
-        <i class={{animated_overlay_play_icon}} (click)="togglePlay()"></i>
-        <i class={{animated_overlay_pause_icon}} (click)="togglePlay()"></i>
+      <div (click)="togglePlay()" class='flex-h-center center-button' >
+            <button mat-icon-button
+              class="icon-button"
+              (click)="togglePlay()">
+              @if (!videoplayer.paused) {
+                <mat-icon class="big-icon animated-play-pause" >play_arrow</mat-icon>
+              } @else {
+                <mat-icon class="big-icon animated-play-pause" >pause</mat-icon>
+              }
+            </button>
+
+
       </div>
     </div>
+
+    <div class="{{videoplayer.paused ? 'cast-overlay' : 'hidden'}}" #castOverlay>
+      <div *ngFor="let c of cast" class="cast-card">
+        <img [src]="c.pictureData" />
+        <div>
+        <span>{{c.name}} playing {{c.character}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="{{videoplayer.paused ? 'dim-overlay' : 'transp'}}" (click)="togglePlay()" #dimOverlay>
+
+    </div>
+
     <div class="absolute-video">
       <video (click)="togglePlay()" #videoplayer class="absolute-video" src={{videoSrc}}></video>
 
@@ -24,27 +47,27 @@
         </div>
         <div class="button_row">
           <div class="button_row_left">
-          <button pButton ngDefaultControl
-            title="Toggle Play"
-            class="player_button"
-            (click)="togglePlay()"
-            icon="{{playpausesymbol}}"
-            [rounded]="false"
-            ></button>
+            <button mat-icon-button
+              class="icon-button"
+              (click)="togglePlay()">
+              @if (videoplayer.paused) {
+                <mat-icon>play_arrow</mat-icon>
+              } @else {
+                <mat-icon>pause</mat-icon>
+              }
+            </button>
 
-          <button pButton ngDefaultControl
-            title="Toggle Mute"
-            class="player_button"
-            (click)="toggleMute()"
-            icon="{{mutesymbol}}"
-            [rounded]="false"
-            ></button>
+            <button mat-icon-button
+                    class="icon-button"
+                    (click)="toggleMute()"
+                    >
+              <mat-icon>{{mutesymbol}}</mat-icon>
+            </button>
 
             <div class="volume-container flex-v-center">
-            <p-slider class="player_volume"
-              [(ngModel)]="video_volume"
-              (ngModelChange)="setVolume($event)"
-              ngDefaultControl styleClass="w-56" />
+            <mat-slider >
+              <input matSliderThumb (ngModelChange)="setVolume()" [(ngModel)]="video_volume" value="{{video_volume}}">
+            </mat-slider>
             </div>
 
             <div class="duration-container flex-v-center">
@@ -54,14 +77,12 @@
           <div class="button_row_center">
           </div>
           <div class="button_row_right">
-          <button pButton ngDefaultControl
-            title="Maximise/Minimise"
-            class="player_button"
-            (click)="toggleMaximise()"
-            icon="pi pi-expand"
-            [rounded]="false"
-            ></button>
-
+            <button
+              mat-icon-button
+              class="icon-button"
+              (click)="toggleMaximise()">
+                <mat-icon>fullscreen</mat-icon>
+            </button>
           </div>
         </div>
 
